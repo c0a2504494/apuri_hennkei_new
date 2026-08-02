@@ -22,8 +22,25 @@ let audio = null;
 const $ = (id) => document.getElementById(id);
 
 function load() {
-  try { return { ...defaultState, ...JSON.parse(localStorage.getItem(storeKey)) }; }
-  catch { return structuredClone(defaultState); }
+  try {
+    const savedState = JSON.parse(localStorage.getItem(storeKey));
+    if (!savedState || typeof savedState !== "object") return structuredClone(defaultState);
+
+    const savedOrder = Array.isArray(savedState.order) ? savedState.order : [];
+    const knownFeatureIds = features.map(([id]) => id);
+    const validSavedOrder = savedOrder.filter((id, index) => knownFeatureIds.includes(id) && savedOrder.indexOf(id) === index);
+
+    return {
+      ...structuredClone(defaultState),
+      ...savedState,
+      alarms: Array.isArray(savedState.alarms) ? savedState.alarms : [],
+      routine: Array.isArray(savedState.routine) ? savedState.routine : structuredClone(defaultState.routine),
+      enabled: { ...defaultState.enabled, ...(savedState.enabled || {}) },
+      order: [...validSavedOrder, ...knownFeatureIds.filter((id) => !validSavedOrder.includes(id))]
+    };
+  } catch {
+    return structuredClone(defaultState);
+  }
 }
 function save() { localStorage.setItem(storeKey, JSON.stringify(state)); }
 function escapeHtml(value) {
