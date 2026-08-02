@@ -43,6 +43,10 @@ function load() {
   }
 }
 function save() { localStorage.setItem(storeKey, JSON.stringify(state)); }
+function createId() {
+  if (typeof crypto.randomUUID === "function") return crypto.randomUUID();
+  return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
 function escapeHtml(value) {
   return String(value).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[c]));
 }
@@ -87,7 +91,8 @@ function renderClock() {
   $("nextAlarmText").textContent = active ? `次は ${active.time} ${active.label || "目覚まし"}` : "アラームはまだありません";
 }
 function renderAlarms() {
-  $("alarmList").innerHTML = state.alarms.length ? state.alarms.sort((a, b) => a.time.localeCompare(b.time)).map((alarm) => `
+  const sortedAlarms = [...state.alarms].sort((a, b) => a.time.localeCompare(b.time));
+  $("alarmList").innerHTML = sortedAlarms.length ? sortedAlarms.map((alarm) => `
     <div class="row">
       <div><strong>${alarm.time}</strong><small>${escapeHtml(alarm.label || "目覚まし")}・${missionLabel(alarm.mission)}</small></div>
       <div class="row-actions">
@@ -160,7 +165,7 @@ function stopSound() {
 
 $("alarmForm").addEventListener("submit", (event) => {
   event.preventDefault();
-  state.alarms.push({ id: crypto.randomUUID(), time: $("alarmTime").value, label: $("alarmLabel").value.trim(), mission: $("alarmMission").value, enabled: true, lastRing: "" });
+  state.alarms.push({ id: createId(), time: $("alarmTime").value, label: $("alarmLabel").value.trim(), mission: $("alarmMission").value, enabled: true, lastRing: "" });
   $("alarmLabel").value = "";
   save();
   render();
@@ -169,6 +174,7 @@ $("alarmList").addEventListener("change", (event) => {
   const id = event.target.dataset.alarmOn;
   if (!id) return;
   const alarm = state.alarms.find((item) => item.id === id);
+  if (!alarm) return;
   alarm.enabled = event.target.checked;
   save();
   render();
