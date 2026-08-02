@@ -32,6 +32,12 @@ function escapeHtml(value) {
 function missionLabel(value) {
   return { tap: "ボタン", math: "計算", type: "合言葉" }[value] || "ボタン";
 }
+function toLocalDateKey(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
 function render() {
   renderOrder();
   renderFeatureToggles();
@@ -82,7 +88,7 @@ function renderRoutine() {
 function checkAlarms() {
   const now = new Date();
   const time = now.toTimeString().slice(0, 5);
-  const today = now.toISOString().slice(0, 10);
+  const today = toLocalDateKey(now);
   state.alarms.forEach((alarm) => {
     if (alarm.enabled && alarm.time === time && alarm.lastRing !== today) {
       alarm.lastRing = today;
@@ -112,19 +118,26 @@ function createMission(type) {
 }
 function playSound() {
   stopSound();
-  audio = new (window.AudioContext || window.webkitAudioContext)();
-  const osc = audio.createOscillator();
-  const gain = audio.createGain();
-  osc.frequency.value = 720;
-  gain.gain.value = .1;
-  osc.connect(gain).connect(audio.destination);
-  osc.start();
-  audio.osc = osc;
+  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContextClass) return;
+
+  try {
+    audio = new AudioContextClass();
+    const osc = audio.createOscillator();
+    const gain = audio.createGain();
+    osc.frequency.value = 720;
+    gain.gain.value = .1;
+    osc.connect(gain).connect(audio.destination);
+    osc.start();
+    audio.osc = osc;
+  } catch {
+    audio = null;
+  }
 }
 function stopSound() {
   if (!audio) return;
-  audio.osc?.stop();
-  audio.close();
+  try { audio.osc?.stop(); } catch {}
+  audio.close().catch(() => {});
   audio = null;
 }
 
