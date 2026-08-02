@@ -1,0 +1,9 @@
+{
+  "name": "めざまし変形",
+  "short_name": "めざまし",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#f8f2ea",
+  "theme_color": "#f8f2ea",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}

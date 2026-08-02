@@ -1,0 +1,182 @@
+:root {
+  --bg: #f8f2ea;
+  --panel: #fffdf8;
+  --ink: #1f2a34;
+  --muted: #66717d;
+  --line: #ded4c7;
+  --accent: #df6b45;
+  --accent2: #2d7d75;
+  --shadow: 0 18px 36px rgba(53, 44, 34, 0.13);
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  letter-spacing: 0;
+}
+button, input, select { font: inherit; }
+button { cursor: pointer; }
+.app {
+  width: min(960px, 100%);
+  margin: 0 auto;
+  padding: max(18px, env(safe-area-inset-top)) 16px 32px;
+}
+.topbar, .section-head, .row, .switch, .hero { display: flex; align-items: center; }
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  justify-content: space-between;
+  padding: 10px 0;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(14px);
+}
+h1, h2, p { margin: 0; }
+h1 { font-size: 1.5rem; }
+h2 { font-size: 1.08rem; }
+.eyebrow {
+  color: var(--accent2);
+  font-size: .72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+.panel {
+  margin-top: 12px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  box-shadow: 0 8px 22px rgba(53, 44, 34, 0.07);
+}
+.hero {
+  position: relative;
+  justify-content: space-between;
+  min-height: 210px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #fff9dc, #ffd8c7 56%, #c9edf0);
+  box-shadow: var(--shadow);
+}
+.clock {
+  font-size: clamp(3rem, 16vw, 6.4rem);
+  font-weight: 950;
+  font-variant-numeric: tabular-nums;
+}
+.sun {
+  width: 112px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #f6be45;
+  box-shadow: 0 0 0 22px rgba(246, 190, 69, .22);
+}
+.icon-button, .text-button, .primary, .mini {
+  border: 0;
+  font-weight: 850;
+}
+.icon-button {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--panel);
+  color: var(--ink);
+  box-shadow: 0 8px 18px rgba(53, 44, 34, 0.1);
+}
+.icon-button.is-on { background: var(--ink); color: #fff; }
+.text-button, .pill {
+  min-height: 34px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: #eadfce;
+  color: var(--ink);
+  font-size: .82rem;
+}
+.pill { display: inline-grid; place-items: center; font-weight: 850; }
+.pill.ad { background: #fff0c8; color: #755519; }
+.primary {
+  min-height: 48px;
+  padding: 0 18px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: #fff;
+}
+.form-grid, .toggle-grid, .check-list, .list {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+}
+label span {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: .82rem;
+  font-weight: 800;
+}
+input, select {
+  width: 100%;
+  min-height: 46px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0 12px;
+  background: #fff;
+  color: var(--ink);
+}
+.row {
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 58px;
+  border-top: 1px solid var(--line);
+}
+.row:first-child { border-top: 0; }
+.row small, .muted { color: var(--muted); line-height: 1.55; }
+.row-actions { display: flex; align-items: center; gap: 8px; }
+.switch {
+  gap: 8px;
+  min-height: 38px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #eadfce;
+  font-weight: 900;
+}
+.switch input { width: 18px; min-height: 18px; accent-color: var(--accent2); }
+.mini {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #eadfce;
+  color: var(--ink);
+}
+.movable.is-hidden { display: none; }
+.app.is-editing .movable {
+  outline: 2px dashed var(--accent);
+  touch-action: none;
+}
+.movable.dragging { opacity: .55; transform: scale(.985); }
+dialog {
+  width: min(92vw, 430px);
+  border: 0;
+  border-radius: 12px;
+  padding: 0;
+  background: transparent;
+}
+dialog::backdrop { background: rgba(31, 42, 52, .38); backdrop-filter: blur(4px); }
+.dialog-card {
+  display: grid;
+  gap: 14px;
+  padding: 20px;
+  border-radius: 12px;
+  background: var(--panel);
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+#missionAnswer { display: none; text-align: center; font-weight: 900; }
+@media (min-width: 720px) {
+  .form-grid { grid-template-columns: 160px 1fr 170px auto; align-items: end; }
+  .toggle-grid { grid-template-columns: repeat(2, 1fr); }
+}
