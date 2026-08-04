@@ -32,15 +32,15 @@
         <section class="summary movable" data-feature="summary">
           <button class="help-button" data-help="summary" aria-label="予算サマリーの説明">?</button>
           <div>
-          <span id="summaryBudgetLabel">今月の予算</span>
+            <span id="summaryBudgetLabel">今月の予算</span>
             <strong id="budgetTotal">¥0</strong>
           </div>
           <div>
-          <span id="summarySpentLabel">使った</span>
+            <span id="summarySpentLabel">使った</span>
             <strong id="budgetSpent">¥0</strong>
           </div>
           <div>
-          <span id="summaryLeftLabel">残り</span>
+            <span id="summaryLeftLabel">残り</span>
             <strong id="budgetLeft">¥0</strong>
           </div>
         </section>
@@ -119,37 +119,14 @@
       <form method="dialog" class="dialog-card">
         <div class="section-head">
           <div>
-            <p class="eyebrow">transform</p>
-            <h2>設定</h2>
+            <p class="eyebrow">customize</p>
+            <h2>表示する機能</h2>
           </div>
           <button class="icon-button" value="close" aria-label="閉じる">×</button>
         </div>
-        <div class="ad-slot">広告スペース: 変形前の短い案内</div>
-        <p class="muted">必要な機能だけONにできます。最初は何もない状態から、使う人に合わせて画面を作ります。</p>
+        <div class="ad-slot">広告スペース: 設定前の短い案内</div>
+        <p class="muted">必要な機能だけONにできます。設定はこの端末のブラウザに保存されます。</p>
         <div id="featureToggles" class="toggle-grid"></div>
-        <div class="ai-box">
-          <div class="section-head">
-            <div>
-              <p class="eyebrow">llm morph</p>
-              <h2>AI変形</h2>
-            </div>
-            <span class="pill">JSON安全変形</span>
-          </div>
-          <label>
-            <span>OpenAI APIキー</span>
-            <input id="apiKeyInput" type="password" autocomplete="off" placeholder="sk-...（試作。本番はサーバー管理）" />
-          </label>
-          <label>
-            <span>モデル</span>
-            <input id="modelInput" value="gpt-4.1-mini" />
-          </label>
-          <label>
-            <span>どう変形したい？</span>
-            <textarea id="morphPrompt" rows="4" placeholder="例: 小学生向けに、グラフなしで、残りのお金がすぐ分かる画面にして"></textarea>
-          </label>
-          <button class="primary" id="aiMorphButton" type="button">AIで変形する</button>
-          <p class="status-text" id="aiStatus">APIキーなしでも、おためし変形は動きます。</p>
-        </div>
       </form>
     </dialog>
 
@@ -166,6 +143,7 @@
         <p id="helpText" class="muted"></p>
       </form>
     </dialog>
+
     <script src="app.js"></script>
   </body>
 </html>
