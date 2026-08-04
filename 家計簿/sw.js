@@ -1,4 +1,4 @@
-const cacheName = "kakeibo-morph-v5";
+const cacheName = "kakeibo-morph-v6";
 const files = ["./", "index.html", "styles.css", "app.js", "manifest.webmanifest", "icon.svg"];
 self.addEventListener("install", (event) => event.waitUntil(caches.open(cacheName).then((cache) => cache.addAll(files))));
 self.addEventListener("fetch", (event) => event.respondWith(caches.match(event.request).then((cached) => cached || fetch(event.request))));
