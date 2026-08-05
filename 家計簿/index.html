@@ -4,39 +4,58 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#f4f6ef" />
+    <meta name="description" content="端末内に保存して使える、シンプルな家計簿アプリ" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <title>かけいぼ変形</title>
     <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="icon.svg" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <main class="app" id="appShell" data-theme="green">
       <header class="topbar">
         <div>
-          <p class="eyebrow" id="appEyebrow">budget morph</p>
+          <p class="eyebrow" id="appEyebrow">budget notebook</p>
           <h1 id="appTitle">かけいぼ変形</h1>
         </div>
         <div class="header-actions">
-          <button class="icon-button" id="settingsButton" aria-label="設定">⚙</button>
+          <button class="icon-button" id="settingsButton" type="button" aria-label="設定を開く">⚙</button>
         </div>
       </header>
 
-      <section class="empty-state" id="emptyState">
+      <nav class="month-toolbar" aria-label="表示する月">
+        <button class="mini" id="previousMonthButton" type="button" aria-label="前の月">‹</button>
+        <label class="month-picker-label">
+          <span class="sr-only">表示月</span>
+          <input id="monthPicker" type="month" />
+        </label>
+        <button class="mini" id="nextMonthButton" type="button" aria-label="次の月">›</button>
+        <button class="text-button" id="currentMonthButton" type="button">今月</button>
+      </nav>
+
+      <section class="empty-state is-hidden" id="emptyState">
         <div class="empty-art" aria-hidden="true"></div>
-        <p class="eyebrow">blank canvas</p>
-        <h2>まだ何もありません</h2>
-        <p>右上の設定から、使いたい機能だけONにしてください。</p>
+        <p class="eyebrow">customize</p>
+        <h2>表示する機能がありません</h2>
+        <p>右上の設定から、使いたい機能をONにしてください。</p>
         <button class="primary" id="emptySettingsButton" type="button">機能を選ぶ</button>
       </section>
 
       <div class="feature-stack" id="featureStack">
         <section class="summary movable" data-feature="summary">
-          <button class="help-button" data-help="summary" aria-label="予算サマリーの説明">?</button>
+          <button class="help-button" data-help="summary" type="button" aria-label="予算サマリーの説明">?</button>
           <div>
-            <span id="summaryBudgetLabel">今月の予算</span>
+            <span id="summaryBudgetLabel">予算</span>
             <strong id="budgetTotal">¥0</strong>
           </div>
           <div>
-            <span id="summarySpentLabel">使った</span>
+            <span>収入</span>
+            <strong id="incomeTotal">¥0</strong>
+          </div>
+          <div>
+            <span id="summarySpentLabel">支出</span>
             <strong id="budgetSpent">¥0</strong>
           </div>
           <div>
@@ -49,32 +68,38 @@
           <div class="section-head">
             <div class="title-row">
               <h2 data-feature-title="input">すぐ記録</h2>
-              <button class="help-button" data-help="input" aria-label="すぐ記録の説明">?</button>
+              <button class="help-button" data-help="input" type="button" aria-label="すぐ記録の説明">?</button>
             </div>
-            <span class="pill">3タップ目標</span>
+            <span class="pill">端末内保存</span>
           </div>
+
           <form id="budgetForm" class="form-grid">
             <label>
-              <span>予算</span>
+              <span>月の予算</span>
               <input id="monthlyBudget" type="number" min="0" step="100" inputmode="numeric" />
             </label>
             <label>
+              <span>種類</span>
+              <select id="transactionType">
+                <option value="expense">支出</option>
+                <option value="income">収入</option>
+              </select>
+            </label>
+            <label>
               <span>金額</span>
-              <input id="expenseAmount" type="number" min="0" step="10" inputmode="numeric" required />
+              <input id="expenseAmount" type="number" min="1" step="1" inputmode="numeric" required />
+            </label>
+            <label>
+              <span>日付</span>
+              <input id="expenseDate" type="date" required />
             </label>
             <label>
               <span>カテゴリ</span>
-              <select id="expenseCategory">
-                <option>食べもの</option>
-                <option>交通</option>
-                <option>学校・仕事</option>
-                <option>遊び</option>
-                <option>その他</option>
-              </select>
+              <select id="expenseCategory"></select>
             </label>
             <label class="wide">
               <span>メモ</span>
-              <input id="expenseMemo" maxlength="32" placeholder="例: お昼ごはん" />
+              <input id="expenseMemo" maxlength="48" placeholder="例: お昼ごはん" />
             </label>
             <button class="primary wide" type="submit">記録する</button>
           </form>
@@ -83,22 +108,45 @@
         <section class="panel movable" data-feature="chart">
           <div class="section-head">
             <div class="title-row">
-              <h2 data-feature-title="chart">カテゴリ</h2>
-              <button class="help-button" data-help="chart" aria-label="カテゴリの説明">?</button>
+              <h2 data-feature-title="chart">カテゴリ別支出</h2>
+              <button class="help-button" data-help="chart" type="button" aria-label="カテゴリ別支出の説明">?</button>
             </div>
-            <button class="text-button" id="resetButton">リセット</button>
+            <span class="pill" id="chartMonthLabel">今月</span>
           </div>
-          <canvas id="chart" width="320" height="220" aria-label="カテゴリ別支出"></canvas>
+          <canvas id="chart" width="360" height="250" aria-label="カテゴリ別支出グラフ"></canvas>
         </section>
 
         <section class="panel movable" data-feature="records">
           <div class="section-head">
             <div class="title-row">
-              <h2 data-feature-title="records">最近の記録</h2>
-              <button class="help-button" data-help="records" aria-label="最近の記録の説明">?</button>
+              <h2 data-feature-title="records">記録一覧</h2>
+              <button class="help-button" data-help="records" type="button" aria-label="記録一覧の説明">?</button>
             </div>
-            <span class="pill">ローカル保存</span>
+            <button class="text-button danger-text" id="clearMonthButton" type="button">月を消去</button>
           </div>
+
+          <div class="record-filters">
+            <label>
+              <span class="sr-only">記録を検索</span>
+              <input id="recordSearch" type="search" placeholder="メモ・カテゴリを検索" />
+            </label>
+            <label>
+              <span class="sr-only">種類で絞り込み</span>
+              <select id="recordTypeFilter">
+                <option value="all">収入・支出すべて</option>
+                <option value="expense">支出だけ</option>
+                <option value="income">収入だけ</option>
+              </select>
+            </label>
+            <label>
+              <span class="sr-only">カテゴリで絞り込み</span>
+              <select id="recordCategoryFilter">
+                <option value="all">すべてのカテゴリ</option>
+              </select>
+            </label>
+          </div>
+
+          <p class="result-count" id="recordCount">0件</p>
           <div id="expenseList" class="list"></div>
         </section>
 
@@ -106,9 +154,9 @@
           <div class="section-head">
             <div class="title-row">
               <h2 data-feature-title="goals">ちいさな目標</h2>
-              <button class="help-button" data-help="goals" aria-label="ちいさな目標の説明">?</button>
+              <button class="help-button" data-help="goals" type="button" aria-label="ちいさな目標の説明">?</button>
             </div>
-            <span class="pill">ON/OFF可能</span>
+            <span class="pill">習慣</span>
           </div>
           <div id="goalList" class="check-list"></div>
         </section>
@@ -120,13 +168,81 @@
         <div class="section-head">
           <div>
             <p class="eyebrow">customize</p>
-            <h2>表示する機能</h2>
+            <h2>設定</h2>
           </div>
           <button class="icon-button" value="close" aria-label="閉じる">×</button>
         </div>
-        <div class="ad-slot">広告スペース: 設定前の短い案内</div>
-        <p class="muted">必要な機能だけONにできます。設定はこの端末のブラウザに保存されます。</p>
-        <div id="featureToggles" class="toggle-grid"></div>
+
+        <section class="settings-section">
+          <h3>見た目</h3>
+          <label>
+            <span>テーマ</span>
+            <select id="themeSelect">
+              <option value="green">グリーン</option>
+              <option value="child">あたたかい</option>
+              <option value="calm">落ち着いた青</option>
+              <option value="minimal">シンプル</option>
+            </select>
+          </label>
+        </section>
+
+        <section class="settings-section">
+          <div class="section-head">
+            <h3>表示する機能・順番</h3>
+            <span class="pill">↑↓で移動</span>
+          </div>
+          <p class="muted">必要な機能だけONにできます。順番も変更できます。</p>
+          <div id="featureToggles" class="feature-controls"></div>
+        </section>
+
+        <section class="settings-section">
+          <h3>データ管理</h3>
+          <p class="muted">データはこの端末のブラウザに保存されます。機種変更やブラウザのデータ消去に備えてバックアップしてください。</p>
+          <div class="data-actions">
+            <button class="secondary" id="exportCsvButton" type="button">CSVを書き出す</button>
+            <button class="secondary" id="exportBackupButton" type="button">バックアップ保存</button>
+            <button class="secondary" id="importBackupButton" type="button">バックアップ復元</button>
+            <button class="danger" id="clearAllButton" type="button">全データを削除</button>
+          </div>
+          <input id="backupFileInput" class="sr-only" type="file" accept="application/json,.json" />
+        </section>
+      </form>
+    </dialog>
+
+    <dialog id="editDialog">
+      <form id="editForm" class="dialog-card">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">edit</p>
+            <h2>記録を編集</h2>
+          </div>
+          <button class="icon-button" id="closeEditButton" type="button" aria-label="閉じる">×</button>
+        </div>
+        <input id="editTransactionId" type="hidden" />
+        <label>
+          <span>種類</span>
+          <select id="editTransactionType">
+            <option value="expense">支出</option>
+            <option value="income">収入</option>
+          </select>
+        </label>
+        <label>
+          <span>金額</span>
+          <input id="editAmount" type="number" min="1" step="1" inputmode="numeric" required />
+        </label>
+        <label>
+          <span>日付</span>
+          <input id="editDate" type="date" required />
+        </label>
+        <label>
+          <span>カテゴリ</span>
+          <select id="editCategory"></select>
+        </label>
+        <label>
+          <span>メモ</span>
+          <input id="editMemo" maxlength="48" />
+        </label>
+        <button class="primary" type="submit">変更を保存</button>
       </form>
     </dialog>
 
@@ -143,6 +259,8 @@
         <p id="helpText" class="muted"></p>
       </form>
     </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
     <script src="app.js"></script>
   </body>
