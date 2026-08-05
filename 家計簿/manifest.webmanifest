@@ -1,9 +1,23 @@
 {
+  "id": "./",
   "name": "かけいぼ変形",
   "short_name": "かけいぼ",
-  "start_url": ".",
+  "description": "端末内に保存して使える、シンプルな家計簿アプリ",
+  "lang": "ja",
+  "dir": "ltr",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
+  "orientation": "portrait-primary",
   "background_color": "#f4f6ef",
   "theme_color": "#f4f6ef",
-  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+  "categories": ["finance", "productivity"],
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
 }
